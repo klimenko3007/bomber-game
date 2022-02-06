@@ -18,7 +18,6 @@ class Color {
   get a () { return this._a}
 }
 
-
 const drawPixel = (_imageData, x, y, color) => {
   const step = 4; //every pixel is R G B A, so we need 4 steps between each pixel
   const one_row = Y_INDEX_BREAK*step; 
@@ -35,12 +34,58 @@ const drawPixel = (_imageData, x, y, color) => {
 // TODO: replace magic numbers to get them from context
 const imageData = ctx.createImageData(400, 400)
 
-// drawPixel(imageData, 10, 10) 
-for(let x=0; x< 400; ++x)
-{
+const red = new Color(255, 0, 0);
+const green = new Color(0, 255, 0);
+const blue = new Color(0, 0, 255);
+
+const drawColor = (color) => {
+  for(let x=0; x< 400; ++x)
+  {
     for(let y=0; y< 400; ++y)
     {
-        drawPixel(imageData, x, y, {r: 0, g: 0, b: 255, a: 255 });
+      drawPixel(imageData, x, y, color);
     }
+  }
+  ctx.putImageData(imageData, 0, 0);
 }
-ctx.putImageData(imageData, 0, 0)
+
+const colors = [red, green, blue];
+let active_color = colors[0];
+
+const sleep = (time, callback, color) =>
+{
+  return new Promise( (resolve) => 
+    {
+      return setTimeout( () =>
+      {
+        resolve(callback(color));
+      }, time);
+    }
+  );
+};
+
+let count = 0;
+const doit = async () =>
+{
+  await sleep(100, drawColor, active_color)
+  if(count <3)
+  {
+    active_color = colors[0];
+  }
+  else if(count >= 3 && count < 6)
+  {
+    active_color = colors[1];
+  }
+  else if(count < 9)
+  {
+    active_color = colors[2];
+  }
+  else
+  {
+    active_color = colors[0];
+    count = 0;
+  }
+  count++;
+};
+
+setInterval(doit, 1000);
