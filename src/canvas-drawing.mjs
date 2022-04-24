@@ -1,5 +1,10 @@
 // create rendering context
-const canvas = document.getElementById('my-canvas');
+
+const app = document.querySelector('#root')
+const canvas = document.createElement('canvas')
+canvas.setAttribute('id', 'canvas')
+app.append(canvas)
+console.log(canvas)
 const ctx = canvas.getContext('2d')
 
 // TODO: Relate to canvas size
@@ -65,7 +70,7 @@ const sleep = (time, callback, color) =>
 };
 
 let count = 0;
-const doit = async () =>
+export const doit = async () =>
 {
   await sleep(100, drawColor, active_color)
   if(count <3)
@@ -88,4 +93,4 @@ const doit = async () =>
   count++;
 };
 
-setInterval(doit, 1000);
+
